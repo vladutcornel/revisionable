@@ -117,7 +117,7 @@ class Revisionable extends Eloquent
 
             foreach ($changes_to_record as $key => $change) {
 
-                $revisions[] = array(
+                $revisions[] = $this->getPostSaveRevision($key, array(
                     'revisionable_type'     => get_class($this),
                     'revisionable_id'       => $this->getKey(),
                     'key'                   => $key,
@@ -126,7 +126,7 @@ class Revisionable extends Eloquent
                     'user_id'               => $this->getUserId(),
                     'created_at'            => new \DateTime(),
                     'updated_at'            => new \DateTime(),
-                );
+                ));
 
             }
 
@@ -138,6 +138,17 @@ class Revisionable extends Eloquent
         }
 
     }
+    
+    /**
+     * Override this in subclass if you need to add/change revision fields
+     * 
+     * @param string $key the revision key
+     * @param array $defaults the original array
+     * @return array the modified array
+     */
+    protected function getPostSaveRevision($key, $defaults) {
+        return $defaults;
+    }
 
     /**
      * If softdeletes are enabled, store the deleted time
@@ -147,7 +158,7 @@ class Revisionable extends Eloquent
         if ((!isset($this->revisionEnabled) || $this->revisionEnabled)
             && $this->isSoftDelete()
             && $this->isRevisionable('deleted_at')) {
-            $revisions[] = array(
+            $revisions[] = $this->getPostDeleteRevision('deleted_at', array(
                 'revisionable_type' => get_class($this),
                 'revisionable_id' => $this->getKey(),
                 'key' => 'deleted_at',
@@ -156,10 +167,21 @@ class Revisionable extends Eloquent
                 'user_id' => $this->getUserId(),
                 'created_at' => new \DateTime(),
                 'updated_at' => new \DateTime(),
-            );
+            ));
             $revision = new \Venturecraft\Revisionable\Revision;
             \DB::table($revision->getTable())->insert($revisions);
         }
+    }
+    
+    /**
+     * Override this in subclass if you need to add/change delete revision fields
+     * 
+     * @param string $key the revision key
+     * @param array $defaults the original array
+     * @return array the modified array
+     */
+    protected function getPostDeleteRevision($key, $defaults) {
+        return $defaults;
     }
 
     /**
