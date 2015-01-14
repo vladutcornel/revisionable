@@ -1,13 +1,17 @@
 {
-    "name": "venturecraft/revisionable",
+    "name": "assetinventories/revisionable",
     "license": "MIT",
-    "description": "Keep a revision history for your models without thinking, created as a package for use with Laravel 4",
+    "description": "Keep a revision history for your models without thinking, created as a package for use with Laravel 4. Forked for Asset Inventories Inc.",
     "keywords": ["model", "laravel", "ardent", "revision", "history"],
     "homepage": "http://github.com/venturecraft/revisionable",
     "authors": [
         {
             "name": "Chris Duell",
             "email": "me@chrisduell.com"
+        },
+        {
+            "name": "Cornel Borina",
+            "email": "cornel@borina.ro"
         }
     ],
     "support": {
