@@ -67,12 +67,18 @@ php artisan migrate --package=venturecraft/revisionable
 ### The new, trait based implementation
 
 For any model that you want to keep a revision history for, include the revisionable namespace and use the `RevisionableTrait` in your model, e.g.,
+If you are using another bootable trait the be sure to override the boot method in your model;
 
 ```php
 namespace MyApp\Models;
 
 class Article extends Eloquent {
     use \Venturecraft\Revisionable\RevisionableTrait;
+
+    public static function boot()
+    {
+        parent::boot();
+    }
 }
 ```
 
@@ -107,6 +113,19 @@ class Article extends Eloquent {
     use Venturecraft\Revisionable\RevisionableTrait;
 
     protected $revisionEnabled = false;
+}
+```
+
+You can also disable revisioning after X many revisions have been made by setting `$historyLimit` to the number of revisions you want to keep before stopping revisions.
+
+```php
+namespace MyApp\Models;
+
+class Article extends Eloquent {
+    use Venturecraft\Revisionable\RevisionableTrait;
+
+    protected $revisionEnabled = true;
+    protected $historyLimit = 500; //Stop tracking revisions after 500 changes have been made.
 }
 ```
 
