@@ -175,7 +175,7 @@ class Revisionable extends Eloquent
 
         if ((!isset($this->revisionEnabled) || $this->revisionEnabled))
         {
-            $revisions[] = array(
+            $revisions[] = $this->getPostSaveRevision(self::CREATED_AT, [
                 'revisionable_type' => $this->getMorphClass(),
                 'revisionable_id' => $this->getKey(),
                 'key' => self::CREATED_AT,
@@ -184,7 +184,7 @@ class Revisionable extends Eloquent
                 'user_id' => $this->getSystemUserId(),
                 'created_at' => new \DateTime(),
                 'updated_at' => new \DateTime(),
-            );
+            ]);
 
             $revision = new Revision;
             \DB::table($revision->getTable())->insert($revisions);
